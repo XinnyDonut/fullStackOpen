@@ -6,7 +6,7 @@ const Button=({onClick,text})=>{
   )
 }
 
-const Display=({text,total})=><p>{text} {total}</p>
+const Display=({text,num})=><p>{text} {num}</p>
 
 const App = () => {
   // save clicks of each button to its own state
@@ -23,8 +23,20 @@ const App = () => {
   const increaseBadByOne=()=>{
     setBad(bad+1)
   }
+  const total=good+neutral+bad
 
-
+  const showAve=()=>{
+    if(total===0){
+      return ''
+    }
+    return (good*1+bad*(-1))/total
+  }
+  const showPercent=()=>{
+    if(total==0){
+      return ""
+    }
+    return good/total*100+"%"
+  }
   return (
     <div>
       <Header text='give feedback'/>
@@ -32,10 +44,12 @@ const App = () => {
       <Button onClick={increaseNeutralByOne} text='neutral'/>
       <Button onClick={increaseBadByOne} text='bad'/>
       <Header text='statistics'/>
-      <Display text='good' total={good}/>
-      <Display text='neutral' total={neutral}/>
-      <Display text='bad' total={bad}/>
-
+      <Display text='good' num={good}/>
+      <Display text='neutral' num={neutral}/>
+      <Display text='bad' num={bad}/>
+      <Display text='all' num={total}/>
+      <Display text='average' num={showAve()}/>
+      <Display text='positive' num={showPercent()}/>
     </div>
   )
 }
