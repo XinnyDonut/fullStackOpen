@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { createLogger } from 'vite'
 
 const Button=({text,onClick})=><button onClick={onClick}>{text}</button>
 const Header=({text})=><h2>{text}</h2>
@@ -33,23 +34,21 @@ const App = () => {
     setSelected(rand(0,anecdotes.length-1));
   }
   
+  
   const handleVoteClick=()=>{
-   const newVote={...votes,[selected]:votes[selected]+1}
-   setVotes(newVote)   
-  let biggest=0
-  let biggestI
-  for(let i=0;i<anecdotes.length;i++){
-    if((newVote[i])>biggest){
-      biggest=newVote[i]
-      biggestI=i;
-    }
-  }
-  setAnecIndex(biggestI)
-
+    const newVote={...votes,[selected]:votes[selected]+1}
+    setVotes(newVote)   
+    let highestVote=0
+    let highestVoteIndex
+    for(let i=0;i<anecdotes.length;i++){
+      if((newVote[i])>highestVote){
+        highestVote=newVote[i]
+        highestVoteIndex=i;
+      }
+      }
+    setAnecIndex(highestVoteIndex)
   }
       
-
-
   return (
     <div>
       <Header text='Anecdote of the day'/>
