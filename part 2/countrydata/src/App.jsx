@@ -7,12 +7,14 @@ const Search=({value,onChange})=>
     find countries <input value={value} onChange={onChange} />
   </div>
 
-const Result=({array,country})=>{
+const Result=({array,handleClick})=>{
   if(array.length>10){
     return <p>Too many matches,specify another filter</p>
   }else if(array.length<10&&array.length>1){
-    return <ul>{array.map((x,i)=><li key={i}>{x.name.common}</li>)}</ul>
+    return <ul>{array.map((x,i)=>
+      <li key={x.name.common}>{x.name.common} <button onClick={()=>handleClick(x)}>show</button></li>)}</ul>
   }
+  return null
 }
 const Info=({country})=>{
   if(!country){
@@ -69,8 +71,7 @@ function App() {
         objArray.push(obj.name.common,obj.capital[0],obj.area.toString(),Object.values(obj.languages),obj.flags.png)
         console.log(objArray);
         setCountry(objArray)
-      })
-      setInput("")
+      })  
     }
   },[result[0]])
   
@@ -78,11 +79,29 @@ function App() {
   const handleChange=(event)=>{
     setInput(event.target.value)
   }
+  const handleClick=(selectedCountry)=>{
+    axios
+      .get(`https://studies.cs.helsinki.fi/restcountries/api/name/${selectedCountry.name.common.toLowerCase()}`)
+      .then(response => {
+        const obj = response.data
+        const objArray = [
+          obj.name.common, 
+          obj.capital[0], 
+          obj.area.toString(), 
+          Object.values(obj.languages), 
+          obj.flags.png
+        ]
+        setCountry(objArray)
+      })
+      .catch(error => {
+        console.error("Error fetching country details:", error)
+      })
+  }
  
   return (
     <>
       <Search value={input} onChange={handleChange}/>
-      <Result array={result}/>
+      <Result array={result} handleClick={handleClick}/>
       <Info country={country}/>
       
     </>
